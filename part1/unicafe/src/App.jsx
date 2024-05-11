@@ -2,19 +2,29 @@ import { useState } from 'react'
 
 const Button = ({text, handleClick}) => <button onClick={handleClick}>{text}</button>
 
-const StatisticLine = ({text, value, aftertext}) => <div>{text} {value} {aftertext}</div>
-
+const StatisticLine = ({text, value, aftertext}) => {
+  return(
+    <tr>
+      <td>{text}</td>
+      <td>{value} {aftertext}</td>
+    </tr>
+  )
+}
 const Statistics = ({statistics}) => {
     if (!statistics.all) return <p>No feedback given</p>
     return (
       <>
         <h1>statistics</h1>
-        <StatisticLine text='good' value={statistics.good} />
-        <StatisticLine text='neutral' value={statistics.neutral} />
-        <StatisticLine text= 'bad' value={statistics.bad} />
-        <StatisticLine text='all' value={statistics.all} />
-        <StatisticLine text='average' value={statistics.average} />
-        <StatisticLine text='positive' value={statistics.positive} aftertext=' %'/>
+        <table>
+          <tbody>
+            <StatisticLine text='good' value={statistics.good} />
+            <StatisticLine text='neutral' value={statistics.neutral} />
+            <StatisticLine text= 'bad' value={statistics.bad} />
+            <StatisticLine text='all' value={statistics.all} />
+            <StatisticLine text='average' value={statistics.average} />
+            <StatisticLine text='positive' value={statistics.positive} aftertext=' %'/>
+          </tbody>
+        </table>
       </>
     )
 }
@@ -28,7 +38,6 @@ const App = () => {
     average: 0,
     positive: 0
   });
-  
 
   const increaseGood = () => {
     const updatedGood = statistics.good + 1;
