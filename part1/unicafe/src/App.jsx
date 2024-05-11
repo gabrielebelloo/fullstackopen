@@ -5,6 +5,7 @@ const Button = ({text, handleClick}) => <button onClick={handleClick}>{text}</bu
 const Display = ({text, value, aftertext}) => <div>{text} {value} {aftertext}</div>
 
 const Statistics = ({statistics}) => {
+    if (!statistics.all) return <p>No feedback given</p>
     return (
       <>
         <h1>statistics</h1>
