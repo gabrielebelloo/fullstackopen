@@ -4,38 +4,74 @@ const Button = ({text, handleClick}) => <button onClick={handleClick}>{text}</bu
 
 const Display = ({text, value, aftertext}) => <div>{text} {value} {aftertext}</div>
 
+const Statistics = ({statistics}) => {
+    return (
+      <>
+        <h1>statistics</h1>
+        <Display text='good' value={statistics.good} />
+        <Display text='neutral' value={statistics.neutral} />
+        <Display text= 'bad' value={statistics.bad} />
+        <Display text='all' value={statistics.all} />
+        <Display text='average' value={statistics.average} />
+        <Display text='positive' value={statistics.positive} aftertext=' %'/>
+      </>
+    )
+}
+
 const App = () => {
-  const [good, setGood] = useState(0);
-  const [neutral, setNeutral] = useState(0);
-  const [bad, setBad] = useState(0);
-  const [all, setAll] = useState(0);
-  const [average, setAverage] = useState(0);
-  const [positive, setPositive] = useState(0);
+  const [ statistics, setStatistics] = useState({
+    good: 0,
+    neutral: 0,
+    bad: 0,
+    all: 0,
+    average: 0,
+    positive: 0
+  });
+  
 
   const increaseGood = () => {
-    const updatedGood = good + 1;
-    setGood(updatedGood);
-    const updatedAll = updatedGood + neutral + bad;
-    setAll(updatedAll);
-    setAverage((updatedGood - bad) / updatedAll);
-    setPositive(updatedGood / updatedAll * 100);
+    const updatedGood = statistics.good + 1;
+    const updatedAll = updatedGood + statistics.neutral + statistics.bad;
+    const updatedAverage = (updatedGood - statistics.bad) / updatedAll;
+    const updatedPositive = (updatedGood / updatedAll * 100);
+    const newStatistics = {
+      ...statistics,
+      good: updatedGood,
+      all: updatedAll,
+      average: updatedAverage,
+      positive: updatedPositive
+    };
+    setStatistics(newStatistics);
   }
 
   const increaseNeutral = () => {
-    const updatedNeutral = neutral + 1;
-    setNeutral(updatedNeutral);
-    const updatedAll = good + updatedNeutral + bad;
-    setAll(updatedAll);
-    setPositive(good / updatedAll * 100);
+    const updatedNeutral = statistics.neutral + 1;
+    const updatedAll = statistics.good + updatedNeutral + statistics.bad;
+    const updatedAverage = (statistics.good - statistics.bad) / updatedAll;
+    const updatedPositive = statistics.good / updatedAll * 100;
+    const newStatistics = {
+      ...statistics,
+      neutral: updatedNeutral,
+      all: updatedAll,
+      average: updatedAverage,
+      positive: updatedPositive
+    };
+    setStatistics(newStatistics);
   }
 
   const increaseBad = () => {
-    const updatedBad = bad + 1;
-    setBad(updatedBad);
-    const updatedAll = good + neutral + updatedBad;
-    setAll(updatedAll);
-    setAverage((good - updatedBad) / updatedAll);
-    setPositive(good / updatedAll * 100);
+    const updatedBad = statistics.bad + 1;
+    const updatedAll = statistics.good + statistics.neutral + updatedBad;
+    const updatedAverage = (statistics.good - updatedBad) / updatedAll;
+    const updatedPositive = statistics.good / updatedAll * 100;
+    const newStatistics = {
+      ...statistics,
+      bad: updatedBad,
+      all: updatedAll,
+      average: updatedAverage,
+      positive: updatedPositive
+    };
+    setStatistics(newStatistics);
   }
 
   return (
@@ -44,13 +80,7 @@ const App = () => {
       <Button handleClick={increaseGood} text='good'/>
       <Button handleClick={increaseNeutral} text='neutral'/>
       <Button handleClick={increaseBad} text='bad'/>
-      <h1>statistics</h1>
-      <Display text='good' value={good} />
-      <Display text='neutral' value={neutral} />
-      <Display text= 'bad' value={bad} />
-      <Display text='all' value={all} />
-      <Display text='average' value={average} />
-      <Display text='positive' value={positive} aftertext=' %'/>
+      <Statistics statistics={statistics}/>
     </>
   )
 }
