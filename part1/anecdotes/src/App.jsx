@@ -2,6 +2,26 @@ import { useState } from 'react'
 
 const Button = ({text, handleClick}) => <button onClick={handleClick}>{text}</button>
 
+const MostVoted = ({anecdotes, votes, mostVotedIndex}) => {
+  const totalVotes = votes.reduce((pv, cv) => pv + cv, 0);
+  if (!totalVotes) {
+    return (
+      <>
+        <h1>Anecdote with most votes</h1>
+        <p>Still not voted</p>
+      </>
+    )
+  }
+
+  return (
+    <>
+    <h1>Anecdote with most votes</h1>
+      <p>{anecdotes[mostVotedIndex]}</p>
+      <p>has {votes[mostVotedIndex]} votes</p>
+    </>
+  )
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -18,6 +38,8 @@ const App = () => {
 
   const [votes, setVotes] = useState(new Array(8).fill(0));
 
+  const [mostVotedIndex, setMostVotedIndex] = useState(0);
+
   const nextAnecdote = () => {
     const randomNumber = Math.floor(Math.random() * 8);
     setSelected(randomNumber);
@@ -27,14 +49,28 @@ const App = () => {
     const updatedVotes = [...votes]
     updatedVotes[selected] = updatedVotes[selected] + 1;
     setVotes(updatedVotes);
+    const updatedMostVotedIndex = indexOfMax(updatedVotes);
+    setMostVotedIndex(updatedMostVotedIndex);
+  }
+
+  const indexOfMax = (array) => {
+    let maxIndex = 0;
+    for (let i = 1; i < array.length; i++) {
+      if (array[i] > array[maxIndex]) {
+        maxIndex = i;
+      }
+    }
+    return maxIndex;
   }
 
   return (
     <>
+      <h1>Anecdote of the day</h1>
       <p>{anecdotes[selected]}</p>
       <p>has {votes[selected]} votes</p>
       <Button handleClick={() => vote(selected)} text='vote' />
       <Button handleClick={nextAnecdote} text='next anecdote' />
+      <MostVoted anecdotes={anecdotes} votes={votes} mostVotedIndex={mostVotedIndex}/>
     </>
   )
 }
