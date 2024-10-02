@@ -1,14 +1,13 @@
 import Numbers from "./components/Numbers";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import personService from "./services/person";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [filteredPersons, setFilteredPersons] = useState(persons);
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((res) => {
-      const persons = res.data;
+    personService.getAll().then((persons) => {
       setPersons(persons);
       setFilteredPersons(persons);
     });
@@ -18,14 +17,15 @@ const App = () => {
     const newPerson = {
       name: name,
       number: number,
-      id: persons.length + 1,
     };
     const found = persons.find((person) => person.name === newPerson.name);
 
     if (!found) {
-      const newPersons = persons.concat(newPerson);
-      setPersons(newPersons);
-      setFilteredPersons(newPersons);
+      personService.create(newPerson).then((newPerson) => {
+        const newPersons = persons.concat(newPerson);
+        setPersons(newPersons);
+        setFilteredPersons(newPersons);
+      });
     } else {
       alert(`${name} is already added to phonebook`);
     }
