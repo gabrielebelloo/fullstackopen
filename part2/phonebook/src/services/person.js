@@ -12,7 +12,7 @@ const create = (body) => {
 };
 
 const update = (id, body) => {
-  const request = axios.post(baseUrl + `/${id}`, body);
+  const request = axios.put(baseUrl + `/${id}`, body);
   return request.then((res) => res.data);
 };
 

@@ -9,8 +9,7 @@ const App = () => {
 
   useEffect(() => {
     personService.getAll().then((persons) => {
-      setPersons(persons);
-      setFilteredPersons(persons);
+      setPersonsStates(persons);
     });
   }, []);
 
@@ -23,12 +22,22 @@ const App = () => {
 
     if (!found) {
       personService.create(newPerson).then((newPerson) => {
-        const newPersons = persons.concat(newPerson);
-        setPersons(newPersons);
-        setFilteredPersons(newPersons);
+        const newPersonsObj = persons.concat(newPerson);
+        setPersonsStates(newPersonsObj);
       });
     } else {
-      alert(`${name} is already added to phonebook`);
+      if (
+        window.confirm(
+          `${name} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        personService.update(found.id, newPerson).then((newPerson) => {
+          const newPersonsObj = persons.map((person) =>
+            person.id !== found.id ? person : newPerson
+          );
+          setPersonsStates(newPersonsObj);
+        });
+      }
     }
   };
 
@@ -48,10 +57,14 @@ const App = () => {
     if (window.confirm(`Do you really want to delete ${person.name}`)) {
       personService.remove(person.id).then((res) => {
         const newPersonsObj = persons.filter((person) => person.id !== res.id);
-        setPersons(newPersonsObj);
-        setFilteredPersons(newPersonsObj);
+        setPersonsStates(newPersonsObj);
       });
     }
+  };
+
+  const setPersonsStates = (newPersonsObj) => {
+    setPersons(newPersonsObj);
+    setFilteredPersons(newPersonsObj);
   };
 
   return (
@@ -93,8 +106,6 @@ const Form = ({ addPerson }) => {
   const submitForm = (e) => {
     e.preventDefault();
     addPerson(newName, newNumber);
-    setNewName("");
-    setNewNumber("");
   };
 
   return (
