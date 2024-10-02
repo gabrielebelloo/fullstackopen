@@ -1,14 +1,18 @@
 import Numbers from "./components/Numbers";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "040-123456", id: 1 },
-    { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
-    { name: "Dan Abramov", number: "12-43-234345", id: 3 },
-    { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
-  ]);
+  const [persons, setPersons] = useState([]);
   const [filteredPersons, setFilteredPersons] = useState(persons);
+
+  useEffect(() => {
+    axios.get("http://localhost:3001/persons").then((res) => {
+      const persons = res.data;
+      setPersons(persons);
+      setFilteredPersons(persons);
+    });
+  });
 
   const addPerson = (name, number) => {
     const newPerson = {
@@ -17,7 +21,7 @@ const App = () => {
       id: persons.length + 1,
     };
     const found = persons.find((person) => person.name === newPerson.name);
-    
+
     if (!found) {
       const newPersons = persons.concat(newPerson);
       setPersons(newPersons);
