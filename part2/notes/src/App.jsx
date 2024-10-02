@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import noteService from "./services/note";
 import Note from "./components/Note";
 
 const App = (props) => {
@@ -8,13 +8,7 @@ const App = (props) => {
   const [showAll, setShowAll] = useState(true);
 
   useEffect(() => {
-    const eventHandler = (response) => {
-      setNotes(response.data);
-    };
-
-    const promise = axios.get("http://localhost:3001/notes");
-
-    promise.then(eventHandler);
+    noteService.getAll.then((res) => setNotes(res));
   }, []);
 
   const addNote = (event) => {
@@ -23,9 +17,8 @@ const App = (props) => {
       content: newNote,
       important: Math.random() < 0.5,
     };
-
-    axios.post("http://localhost:3001/notes", noteObject).then((res) => {
-      setNotes(notes.concat(res.data));
+    noteService.create(noteObject).then((res) => {
+      setNotes(notes.concat(res));
       setNewNote("");
     });
   };
@@ -37,12 +30,11 @@ const App = (props) => {
   const notesToShow = showAll ? notes : notes.filter((note) => note.important);
 
   const toggleImportanceOf = (id) => {
-    const url = `http://localhost:3001/notes/${id}`;
     const note = notes.find((n) => n.id === id);
     const changedNote = { ...note, important: !note.important };
 
-    axios.put(url, changedNote).then((res) => {
-      setNotes(notes.map((n) => (n.id !== id ? n : res.data))); 
+    noteService.update(id, changedNote).then((res) => {
+      setNotes(notes.map((n) => (n.id !== id ? n : res)));
     });
   };
 
