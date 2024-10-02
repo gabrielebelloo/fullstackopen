@@ -34,7 +34,13 @@ const App = (props) => {
     const changedNote = { ...note, important: !note.important };
 
     noteService.update(id, changedNote).then((res) => {
-      setNotes(notes.map((n) => (n.id !== id ? n : res)));
+      setNotes(
+        notes
+          .map((n) => (n.id !== id ? n : res))
+          .catch((error) => {
+            alert("error", error);
+          })
+      );
     });
   };
 
