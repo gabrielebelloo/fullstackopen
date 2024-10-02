@@ -16,4 +16,9 @@ const update = (id, body) => {
   return request.then((res) => res.data);
 };
 
-export default { getAll, create, update };
+const remove = (id) => {
+  const request = axios.delete(baseUrl + `/${id}`);
+  return request.then((res) => res.data);
+};
+
+export default { getAll, create, update, remove };

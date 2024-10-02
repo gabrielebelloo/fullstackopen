@@ -1,6 +1,7 @@
 import Numbers from "./components/Numbers";
 import { useState, useEffect } from "react";
 import personService from "./services/person";
+import person from "./services/person";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -11,7 +12,7 @@ const App = () => {
       setPersons(persons);
       setFilteredPersons(persons);
     });
-  });
+  }, []);
 
   const addPerson = (name, number) => {
     const newPerson = {
@@ -43,6 +44,16 @@ const App = () => {
     }
   };
 
+  const removePerson = (person) => {
+    if (window.confirm(`Do you really want to delete ${person.name}`)) {
+      personService.remove(person.id).then((res) => {
+        const newPersonsObj = persons.filter((person) => person.id !== res.id);
+        setPersons(newPersonsObj);
+        setFilteredPersons(newPersonsObj);
+      });
+    }
+  };
+
   return (
     <>
       <h2>Phonebook</h2>
@@ -51,7 +62,7 @@ const App = () => {
       <Form addPerson={addPerson} />
       <h2>Numbers</h2>
       <ul>
-        <Numbers persons={filteredPersons} />
+        <Numbers remove={removePerson} persons={filteredPersons} />
       </ul>
     </>
   );
@@ -82,6 +93,8 @@ const Form = ({ addPerson }) => {
   const submitForm = (e) => {
     e.preventDefault();
     addPerson(newName, newNumber);
+    setNewName("");
+    setNewNumber("");
   };
 
   return (
