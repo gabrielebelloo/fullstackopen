@@ -64,13 +64,20 @@ const App = () => {
     }
   };
 
-  const removePerson = (person) => {
-    if (window.confirm(`Do you really want to delete ${person.name}`)) {
-      personService.remove(person.id).then((res) => {
-        const newPersonsObj = persons.filter((person) => person.id !== res.id);
-        setPersonsStates(newPersonsObj);
-        showMessage(`${person.name} removed.`, false);
-      });
+  const removePerson = (personToRemove) => {
+    if (window.confirm(`Do you really want to delete ${personToRemove.name}`)) {
+      personService
+        .remove(personToRemove.id)
+        .then((res) => {
+          const newPersonsObj = persons.filter(
+            (p) => p.id !== personToRemove.id
+          );
+          setPersonsStates(newPersonsObj);
+          showMessage(`${personToRemove.name} removed.`, false);
+        })
+        .catch((err) => {
+          showMessage(`${personToRemove.name} has already been removed.`, true);
+        });
     }
   };
 
