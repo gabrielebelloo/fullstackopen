@@ -1,11 +1,15 @@
 import Numbers from "./components/Numbers";
+import Notification from "./components/Notification";
 import { useState, useEffect } from "react";
 import personService from "./services/person";
-import person from "./services/person";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [filteredPersons, setFilteredPersons] = useState(persons);
+  const [errorMessage, setNewMessage] = useState({
+    content: "",
+    isError: false,
+  });
 
   useEffect(() => {
     personService.getAll().then((persons) => {
@@ -24,6 +28,7 @@ const App = () => {
       personService.create(newPerson).then((newPerson) => {
         const newPersonsObj = persons.concat(newPerson);
         setPersonsStates(newPersonsObj);
+        showMessage(`${newPerson.name} added.`, false);
       });
     } else {
       if (
@@ -36,9 +41,15 @@ const App = () => {
             person.id !== found.id ? person : newPerson
           );
           setPersonsStates(newPersonsObj);
+          showMessage(`${found.name}'s phone number changed.`, false);
         });
       }
     }
+  };
+
+  const showMessage = (content, isError) => {
+    setNewMessage({ content, isError });
+    setTimeout(() => setNewMessage({ content: null, isError: false }), 5000);
   };
 
   const handleInputSearch = (searchInput) => {
@@ -58,6 +69,7 @@ const App = () => {
       personService.remove(person.id).then((res) => {
         const newPersonsObj = persons.filter((person) => person.id !== res.id);
         setPersonsStates(newPersonsObj);
+        showMessage(`${person.name} removed.`, false);
       });
     }
   };
@@ -70,6 +82,7 @@ const App = () => {
   return (
     <>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage} />
       <Filter handleInputSearch={handleInputSearch} />
       <h3>Add a new</h3>
       <Form addPerson={addPerson} />
