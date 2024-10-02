@@ -17,22 +17,20 @@ const App = (props) => {
     promise.then(eventHandler);
   }, []);
 
-  console.log("render", notes.length, "notes");
-
   const addNote = (event) => {
     event.preventDefault();
     const noteObject = {
       content: newNote,
       important: Math.random() < 0.5,
-      id: notes.length + 1,
     };
 
-    setNotes(notes.concat(noteObject));
-    setNewNote("");
+    axios.post("http://localhost:3001/notes", noteObject).then((res) => {
+      setNotes(notes.concat(res.data));
+      setNewNote("");
+    });
   };
 
   const handleNoteChange = (event) => {
-    console.log(event.target.value);
     setNewNote(event.target.value);
   };
 
