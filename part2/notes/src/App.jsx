@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import noteService from "./services/note";
 import Note from "./components/Note";
+import Notification from "./components/Notification";
 
 const App = (props) => {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState("");
   const [showAll, setShowAll] = useState(true);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     noteService.getAll().then((res) => setNotes(res));
@@ -34,19 +36,19 @@ const App = (props) => {
     const changedNote = { ...note, important: !note.important };
 
     noteService.update(id, changedNote).then((res) => {
-      setNotes(
-        notes
-          .map((n) => (n.id !== id ? n : res))
-          .catch((error) => {
-            alert("error", error);
-          })
-      );
-    });
+      setNotes(notes.map((n) => (n.id !== id ? n : res)))})
+        .catch((error) => {
+          setErrorMessage(error);
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
+        });
   };
 
   return (
     <>
       <h1>Notes</h1>
+      <Notification message={errorMessage} />
       <div>
         <button onClick={() => setShowAll(!showAll)}>
           show {showAll ? "important" : "all"}
