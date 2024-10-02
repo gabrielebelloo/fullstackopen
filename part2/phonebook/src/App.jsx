@@ -9,40 +9,26 @@ const App = () => {
     { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
   ]);
   const [filteredPersons, setFilteredPersons] = useState(persons);
-  const [newName, setNewName] = useState("");
-  const [newNumber, setNewNumber] = useState("");
-  const [newSearch, setNewSearch] = useState("");
 
-  const addPerson = (event) => {
-    event.preventDefault();
+  const addPerson = (name, number) => {
     const newPerson = {
-      name: newName,
-      number: newNumber,
+      name: name,
+      number: number,
       id: persons.length + 1,
     };
     const found = persons.find((person) => person.name === newPerson.name);
-
+    
     if (!found) {
       const newPersons = persons.concat(newPerson);
       setPersons(newPersons);
       setFilteredPersons(newPersons);
     } else {
-      alert(`${newName} is already added to phonebook`);
+      alert(`${name} is already added to phonebook`);
     }
   };
 
-  const handleInputName = (event) => {
-    setNewName(event.target.value);
-  };
-
-  const handleInputNumber = (event) => {
-    setNewNumber(event.target.value);
-  };
-
-  const handleInputSearch = (event) => {
-    const searchInput = event.target.value;
-    setNewSearch(searchInput);
-    if (newSearch) {
+  const handleInputSearch = (searchInput) => {
+    if (searchInput) {
       setFilteredPersons(
         persons.filter((person) =>
           person.name.toLowerCase().includes(searchInput.toLowerCase())
@@ -56,21 +42,9 @@ const App = () => {
   return (
     <>
       <h2>Phonebook</h2>
-      <div>
-        search: <input onChange={handleInputSearch} value={newSearch} />
-      </div>
-      <h2>add a new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input onChange={handleInputName} value={newName} />
-        </div>
-        <div>
-          number: <input onChange={handleInputNumber} value={newNumber} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <Filter handleInputSearch={handleInputSearch} />
+      <h3>Add a new</h3>
+      <Form addPerson={addPerson} />
       <h2>Numbers</h2>
       <ul>
         <Numbers persons={filteredPersons} />
@@ -80,3 +54,48 @@ const App = () => {
 };
 
 export default App;
+
+const Filter = ({ handleInputSearch }) => {
+  const [newSearch, setNewSearch] = useState("");
+
+  const handleInput = (event) => {
+    const input = event.target.value;
+    setNewSearch(input);
+    handleInputSearch(input);
+  };
+
+  return (
+    <div>
+      search: <input onChange={handleInput} value={newSearch} />
+    </div>
+  );
+};
+
+const Form = ({ addPerson }) => {
+  const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
+
+  const submitForm = (e) => {
+    e.preventDefault();
+    addPerson(newName, newNumber);
+  };
+
+  return (
+    <form onSubmit={submitForm}>
+      <div>
+        name:{" "}
+        <input onChange={(e) => setNewName(e.target.value)} value={newName} />
+      </div>
+      <div>
+        number:
+        <input
+          onChange={(e) => setNewNumber(e.target.value)}
+          value={newNumber}
+        />
+      </div>
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
+  );
+};
