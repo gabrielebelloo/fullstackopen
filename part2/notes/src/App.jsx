@@ -8,7 +8,7 @@ const App = (props) => {
   const [showAll, setShowAll] = useState(true);
 
   useEffect(() => {
-    noteService.getAll.then((res) => setNotes(res));
+    noteService.getAll().then((res) => setNotes(res));
   }, []);
 
   const addNote = (event) => {
