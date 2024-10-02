@@ -18,7 +18,7 @@
     {
       "id": "1416",
       "content": "Gabriele",
-      "important": true
+      "important": false
     },
     {
       "id": "9bb6",
@@ -28,7 +28,7 @@
     {
       "id": "192e",
       "content": "a",
-      "important": false
+      "important": true
     }
   ]
 }
