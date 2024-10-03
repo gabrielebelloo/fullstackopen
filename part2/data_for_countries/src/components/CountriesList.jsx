@@ -1,14 +1,19 @@
 import CountryDetail from "./CountryDetail";
-import { useState } from "react";
 
-const CountriesList = ({ filteredCountries }) => {
-  const [country, setCountry] = useState({});
+const CountriesList = ({ filteredCountries, showSelectedCountry }) => {
+
+  const selectCountry = (country) => {
+    showSelectedCountry(country);
+  }
 
   if (filteredCountries.length < 10 && filteredCountries.length !== 1) {
     return (
       <ul>
         {filteredCountries.map((country, index) => (
-          <li key={index}>{country.name.common}</li>
+          <li key={index}>
+            {country.name.common}
+            <button onClick={() => selectCountry(country)}>Show</button>
+          </li>
         ))}
       </ul>
     );

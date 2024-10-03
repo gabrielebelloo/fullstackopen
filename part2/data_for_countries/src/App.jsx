@@ -36,12 +36,17 @@ function App() {
     }
   };
 
+  const showSelectedCountry = (country) => {
+    setFilteredCountries([country]);
+    setSearch(country.name.common);
+  }
+
   return (
     <>
       <div>
-        find countries: <input onChange={handleInput} />
+        find countries: <input value={search} onChange={handleInput} />
       </div>
-      <CountriesList filteredCountries={filteredCountries} />
+      <CountriesList filteredCountries={filteredCountries} showSelectedCountry={showSelectedCountry} />
     </>
   );
 }
