@@ -11,4 +11,8 @@ const countryQuery = (country) => {
     return request.then(res => res.data);
 }
 
+const getWeather = (country) => {
+    
+}
+
 export default {getAll, countryQuery}
