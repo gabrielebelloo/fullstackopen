@@ -31,7 +31,6 @@ let notes = [
 
   const generateId = () => {
     const maxId = notes.length > 0 ? Math.max(...notes.map(n => Number(n.id))) : 0;
-    const note = request.body;
     return String(maxId + 1);
   }
 
