@@ -13,11 +13,6 @@ app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>');
 })
 
-const generateId = () => {
-  const maxId = notes.length > 0 ? Math.max(...notes.map(n => Number(n.id))) : 0;
-  return String(maxId + 1);
-}
-
 app.post('/api/notes', (request, response) => {
   const body = request.body;
   
@@ -27,14 +22,14 @@ app.post('/api/notes', (request, response) => {
       })
   }
 
-  const note = {
+  const note = new Note({
       content: body.content,
-      important: Boolean(body.important) || false,
-      id: generateId()
-  }
+      important: Boolean(body.important) || false
+  });
 
-  notes = notes.concat(note);
-  response.json(note);
+  note.save().then(savedNote => {
+    response.json(savedNote);
+  });
 })
 
 app.get('/api/notes', (request, response) => {
@@ -45,12 +40,9 @@ app.get('/api/notes', (request, response) => {
 
 app.get('/api/notes/:id', (request, response) => {
   const id = request.params.id;
-  const note = notes.find(note => note.id === id);
-  if (note) {
-      response.json(note);
-  } else {
-      response.status(404).end();
-  }
+  Note.findById(id).then(note => {
+    response.json(note);
+  });
 })
 
 app.delete('/api/notes/:id', (request, response) => {
