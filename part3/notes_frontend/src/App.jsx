@@ -36,13 +36,14 @@ const App = (props) => {
     const changedNote = { ...note, important: !note.important };
 
     noteService.update(id, changedNote).then((res) => {
-      setNotes(notes.map((n) => (n.id !== id ? n : res)))})
-        .catch((error) => {
-          setErrorMessage(error);
-          setTimeout(() => {
-            setErrorMessage(null);
-          }, 5000);
-        });
+      noteService.getAll().then((notes) => setNotes(notes));
+    });
+  };
+
+  const deleteNote = (id) => {
+    noteService.remove(id).then(res => {
+      noteService.getAll().then((notes) => setNotes(notes));
+    });
   };
 
   return (
@@ -60,6 +61,7 @@ const App = (props) => {
             key={note.id}
             note={note}
             toggleImportance={() => toggleImportanceOf(note.id)}
+            deleteNote={() => deleteNote(note.id)}
           />
         ))}
       </ul>
