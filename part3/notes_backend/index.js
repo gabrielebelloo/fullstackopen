@@ -13,7 +13,7 @@ app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>');
 })
 
-app.post('/api/notes', (request, response) => {
+app.post('/api/notes', (request, response, next) => {
   const body = request.body;
   
   if (!body.content) {
@@ -27,9 +27,11 @@ app.post('/api/notes', (request, response) => {
       important: Boolean(body.important) || false
   });
 
-  note.save().then(savedNote => {
-    response.json(savedNote);
-  });
+  note.save()
+    .then(savedNote => {
+      response.json(savedNote);
+    })
+    .catch(err => next(err));
 })
 
 app.get('/api/notes', (request, response) => {
@@ -62,14 +64,9 @@ app.delete('/api/notes/:id', (request, response, next) => {
 
 app.put('/api/notes/:id', (request, response, next) => {
   const id = request.params.id;
-  const body = request.body;
+  const { content, important } = request.body;
 
-  const note = {
-    content: body.content,
-    important: body.important
-  }
-
-  Note.findByIdAndUpdate(id, note, {new: true})
+  Note.findByIdAndUpdate(id, { content, important } , {new: true, runValidators: true, context: 'query'})
     .then(updatedNote => {
       response.json(updatedNote);
     })
@@ -81,6 +78,8 @@ const errorHandler = (err, req, res, next) => {
 
   if (err.name === 'CastError') {
     return res.status(400).send({ error: 'malformatted id' });
+  } else if (err.name === 'ValidationError') {
+    return res.status(400).send({ error: err.message});
   }
 
   next(err);
