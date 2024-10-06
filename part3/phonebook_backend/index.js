@@ -93,8 +93,10 @@ app.delete('/api/persons/:id', (request, response, next) => {
 })
 
 app.get('/info', (request, response) => {
-    response.send(`<p>Phonebook has info for ${persons.length} people</p>
-                   <p>${new Date()}</p>`)
+    Person.find({}).then(persons => {
+        response.send(`<p>Phonebook has info for ${persons.length} people</p>
+            <p>${new Date()}</p>`)
+    });
 })
 
 const errorHandler = (err, req, res, next) => {
