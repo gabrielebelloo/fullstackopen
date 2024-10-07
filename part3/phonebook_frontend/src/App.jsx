@@ -25,24 +25,31 @@ const App = () => {
     const found = persons.find((person) => person.name === newPerson.name);
 
     if (!found) {
-      personService.create(newPerson).then((newPerson) => {
-        const newPersonsObj = persons.concat(newPerson);
-        setPersonsStates(newPersonsObj);
-        showMessage(`${newPerson.name} added.`, false);
-      });
+      personService.create(newPerson)
+        .then((newPerson) => {
+          const newPersonsObj = persons.concat(newPerson);
+          setPersonsStates(newPersonsObj);
+          showMessage(`${newPerson.name} added.`, false);
+        })
+        .catch(err => {
+          console.log(err);
+          showMessage(err.message.data, true);
+        });
     } else {
       if (
         window.confirm(
           `${name} is already added to phonebook, replace the old number with a new one?`
         )
       ) {
-        personService.update(found.id, newPerson).then((newPerson) => {
-          const newPersonsObj = persons.map((person) =>
-            person.id !== found.id ? person : newPerson
-          );
-          setPersonsStates(newPersonsObj);
-          showMessage(`${found.name}'s phone number changed.`, false);
-        });
+        personService.update(found.id, newPerson)
+          .then((newPerson) => {
+            const newPersonsObj = persons.map((person) =>
+              person.id !== found.id ? person : newPerson
+            );
+            setPersonsStates(newPersonsObj);
+            showMessage(`${found.name}'s phone number changed.`, false);
+          })
+          .catch(err => console.log(err.response.data.error));
       }
     }
   };
