@@ -33,7 +33,7 @@ const App = () => {
         })
         .catch(err => {
           console.log(err);
-          showMessage(err.message.data, true);
+          showMessage(err.response.data.error, true);
         });
     } else {
       if (
