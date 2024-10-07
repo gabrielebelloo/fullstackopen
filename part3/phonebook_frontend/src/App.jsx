@@ -75,14 +75,14 @@ const App = () => {
     if (window.confirm(`Do you really want to delete ${personToRemove.name}`)) {
       personService
         .remove(personToRemove.id)
-        .then((res) => {
+        .then(() => {
           const newPersonsObj = persons.filter(
             (p) => p.id !== personToRemove.id
           );
           setPersonsStates(newPersonsObj);
           showMessage(`${personToRemove.name} removed.`, false);
         })
-        .catch((err) => {
+        .catch(() => {
           showMessage(`${personToRemove.name} has already been removed.`, true);
         });
     }
