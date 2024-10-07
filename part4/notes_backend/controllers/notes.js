@@ -30,7 +30,7 @@ notesRouter.get("/", (request, response) => {
   });
 });
 
-app.get(":id", (request, response, next) => {
+notesRouter.get(":id", (request, response, next) => {
   const id = request.params.id;
   Note.findById(id)
     .then((note) => {
