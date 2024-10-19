@@ -8,9 +8,8 @@ const totalLikes = (blogs) => {
   let totalLikes = 0;
   if (blogs) {
     blogs.forEach((blog) => {
-      totalLikes += blog.like;
+      totalLikes += blog.likes;
     });
-    console.log(totalLikes);
   }
   return totalLikes;
 };
