@@ -13,8 +13,24 @@ const totalLikes = (blogs) => {
   }
   return totalLikes;
 };
+ 
+const favoriteBlog = (blogs) => {
+  mostLikedBlog = null;
+  if (blogs.length > 0) {
+    blogs.forEach(blog => {
+      if (mostLikedBlog === null || blog.likes > mostLikedBlog.likes) {
+        mostLikedBlog = blog;
+      }
+    });
+    delete mostLikedBlog._id;
+    delete mostLikedBlog.url;
+    delete mostLikedBlog.__v;
+  }
+  return mostLikedBlog;
+};
 
 module.exports = {
   dummy,
   totalLikes,
+  favoriteBlog
 };
