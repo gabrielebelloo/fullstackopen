@@ -24,10 +24,9 @@ notesRouter.post("/", (request, response, next) => {
     .catch((err) => next(err));
 });
 
-notesRouter.get("/", (request, response) => {
-  Note.find({}).then((result) => {
-    response.json(result);
-  });
+notesRouter.get("/", async(request, response) => {
+  const notes = await Note.find({});
+  response.json(notes);
 });
 
 notesRouter.get(":id", (request, response, next) => {
