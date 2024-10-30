@@ -2,7 +2,7 @@ const { test, describe } = require("node:test");
 const assert = require("node:assert");
 const listHelper = require("../utils/list_helper");
 
-describe("total likes", () => {
+describe("most liked blog", () => {
   const listWithOneBlog = [
     {
       _id: "5a422aa71b54a676234d17f8",
@@ -41,18 +41,27 @@ describe("total likes", () => {
     },
   ];
 
-  test("of empty list is zero", () => {
-    const result = listHelper.totalLikes([]);
-    assert.strictEqual(result, 0);
+  test("of empty list is null", () => {
+    const result = listHelper.favoriteBlog([]);
+    assert.deepStrictEqual(result, null);
   });
 
-  test("when list has only one blog equals the likes of that", () => {
-    const result = listHelper.totalLikes(listWithOneBlog);
-    assert.strictEqual(result, listWithOneBlog[0].likes);
+  test("when list has only one blog equals the same blog", () => {
+    const result = listHelper.favoriteBlog(listWithOneBlog);
+    const blog = listWithOneBlog[0];
+    delete blog._id;
+    delete blog.url;
+    delete blog.__v;
+    assert.deepStrictEqual(result, blog);
   });
 
-  test("of a bigger list is calculated right", () => {
-    const result = listHelper.totalLikes(biggerList);
-    assert.strictEqual(result, 14);
+  test("of a bigger list is found right", () => {
+    const result = listHelper.favoriteBlog(biggerList);
+    assert.deepStrictEqual(result, {
+      title: "Go To Statement Considered Harmful",
+      author: "Edsger W. Dijkstra",
+      likes: 6
+    });
   });
+  
 });
