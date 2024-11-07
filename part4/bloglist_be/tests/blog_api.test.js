@@ -50,7 +50,6 @@ test('a valid blog can be added', async () => {
     .expect('Content-Type', /application\/json/);
 
   const blogs = await helper.getBlogs();
-
   const contents = blogs.map(b => b.title);
 
   assert.strictEqual(blogs.length, helper.initialBlogs.length + 1);
