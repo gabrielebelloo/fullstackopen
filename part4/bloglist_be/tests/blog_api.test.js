@@ -80,6 +80,24 @@ test('blog unique identifier property is named id', async () => {
   assert(blog_keys.includes('id'));
 });
 
+test('blog without likes property gets 0 as default', async () => {
+  const newBlog = {
+    title: 'Giadina',
+    author: 'Giada',
+    url: 'url'
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+
+  const blogs = await helper.getBlogs();
+  const blogs_likes = blogs.map(b => b.likes);
+
+  assert.strictEqual(blogs_likes[helper.initialBlogs.length], 0);
+});
+
 after(async () => {
   await mongoose.connection.close();
 });
