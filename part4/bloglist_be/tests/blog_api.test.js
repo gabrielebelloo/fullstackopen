@@ -75,6 +75,12 @@ test('blog without title is not added', async () => {
   assert.strictEqual(blogs.length, helper.initialBlogs.length);
 });
 
+test('blog unique identifier property is named id', async () => {
+  const response = await api.get('/api/blogs');
+  const blog_keys = Object.keys(response.body[0]);
+  assert(blog_keys.includes('id'));
+});
+
 after(async () => {
   await mongoose.connection.close();
 });
