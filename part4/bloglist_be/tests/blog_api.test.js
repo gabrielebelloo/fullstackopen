@@ -74,6 +74,23 @@ test('blog without title is not added', async () => {
   assert.strictEqual(blogs.length, helper.initialBlogs.length);
 });
 
+test('blog without url is not added', async () => {
+  const newBlog = {
+    title: 'test',
+    author: 'Gaetano',
+    likes: 2
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400);
+
+  const blogs = await helper.getBlogs();
+
+  assert.strictEqual(blogs.length, helper.initialBlogs.length);
+});
+
 test('blog unique identifier property is named id', async () => {
   const response = await api.get('/api/blogs');
   const blog_keys = Object.keys(response.body[0]);
