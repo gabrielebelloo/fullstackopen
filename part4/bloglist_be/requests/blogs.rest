@@ -5,7 +5,16 @@ POST http://localhost:3000/api/blogs
 Content-Type: application/json
 
 {
+    "title": "test",
     "author": "Gabriele",
     "url": "url",
     "likes": "1"
 }
+
+###
+PUT http://localhost:3000/api/blogs/672e3011a3d99bdbabca98d6
+Content-Type: application/json
+
+{
+    "likes": "5"
+} 

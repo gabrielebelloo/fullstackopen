@@ -93,8 +93,8 @@ test('blog without url is not added', async () => {
 
 test('blog unique identifier property is named id', async () => {
   const response = await api.get('/api/blogs');
-  const blog_keys = Object.keys(response.body[0]);
-  assert(blog_keys.includes('id'));
+  const blogKeys = Object.keys(response.body[0]);
+  assert(blogKeys.includes('id'));
 });
 
 test('blog without likes property gets 0 as default', async () => {
@@ -110,9 +110,38 @@ test('blog without likes property gets 0 as default', async () => {
     .expect(201)
 
   const blogs = await helper.getBlogs();
-  const blogs_likes = blogs.map(b => b.likes);
+  const blogsLikes = blogs.map(b => b.likes);
 
-  assert.strictEqual(blogs_likes[helper.initialBlogs.length], 0);
+  assert.strictEqual(blogsLikes[helper.initialBlogs.length], 0);
+});
+
+test('successfully deletes blog by id', async () => {
+  const response = await api.get('/api/blogs');
+  const firstBlogId = response.body[0].id;
+  await api
+    .delete('/api/blogs/' + firstBlogId)
+    .expect(204);
+  
+  const blogs = await helper.getBlogs();
+
+  assert.strictEqual(blogs.length, helper.initialBlogs.length - 1);  
+});
+
+test('successfully updates blog by id', async () => {
+  const response = await api.get('/api/blogs');
+  const firstBlogId = response.body[0].id;
+  const updatedData = {
+    likes: 69
+  }
+
+  await api
+    .put('/api/blogs/' + firstBlogId)
+    .send(updatedData)
+    .expect(200);
+  
+  const blogs = await helper.getBlogs();
+
+  assert.strictEqual(blogs[0].likes, 69);  
 });
 
 after(async () => {
