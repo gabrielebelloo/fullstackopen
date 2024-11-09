@@ -10,9 +10,12 @@ notesRouter.post("/", async (request, response, next) => {
 
   const note = new Note({
     content: body.content,
-    important: Boolean(body.important) || false,
-    user: user.id
+    important: Boolean(body.important) || false
   });
+
+  if (user) {
+    note.user = user.id;
+  }
 
   const savedNote = await note.save();
   user.notes = user.notes.concat(savedNote._id);

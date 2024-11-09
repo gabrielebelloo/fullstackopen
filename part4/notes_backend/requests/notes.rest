@@ -14,6 +14,14 @@ POST http://localhost:3000/api/notes/
 content-type: application/json
 
 {
+    "important": "true"
+}
+
+###
+POST http://localhost:3000/api/notes/
+content-type: application/json
+
+{
     "content": "testtest",
     "important": "true",
     "userId": "672f3b09d872dafe6a7f4d9d"

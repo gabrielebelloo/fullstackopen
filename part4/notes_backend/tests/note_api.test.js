@@ -8,11 +8,19 @@ const api = supertest(app)
 const helper = require('./test_helper')
 
 const Note = require('../models/note')
+const User = require('../models/user')
 
 describe('when there is initially some notes saved', () => {
   beforeEach(async () => {
-    await Note.deleteMany({})
-    await Note.insertMany(helper.initialNotes)
+    await Note.deleteMany({});
+    await Note.insertMany(helper.initialNotes);
+    await User.deleteMany({});
+    const user = new User({
+      username: 'root',
+      name: 'Superuser',
+      password: 'salainen'
+    });
+    user.save();
   })
 
   test('notes are returned as json', async () => {
@@ -69,9 +77,12 @@ describe('when there is initially some notes saved', () => {
 
   describe('addition of a new note', () => {
     test('succeeds with valid data', async () => {
+      const users = await helper.usersInDb();
+
       const newNote = {
         content: 'async/await simplifies making async calls',
         important: true,
+        userId: users[0].id
       }
 
       await api
