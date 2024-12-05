@@ -3,6 +3,7 @@ GET http://localhost:3000/api/blogs
 ###
 POST http://localhost:3000/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpZCI6IjY3NTFiODM4YWRmODc0NWNjYjdiNzdhMyIsImlhdCI6MTczMzQzMjcxMX0.kM0RuaSozC2ZL0_yFVb7OBg3C9EDRzx_uT8qmdqHNvw
 
 {
     "title": "test",
