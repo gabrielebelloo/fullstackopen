@@ -15,6 +15,19 @@ const initialBlogs = [
   }
 ];
 
+const initialUsers = [
+  {
+    username: 'user1',
+    password: 'password1',
+    name: 'user1'
+  },
+  {
+    username: 'user2',
+    password: 'password2',
+    name: 'user2'
+  },
+];
+
 const nonExistingId = async () => {
   const blog = new Blog({ 
     title: 'Blog to remove',s
@@ -30,5 +43,5 @@ const getBlogs = async () => {
 };
 
 module.exports = {
-  initialBlogs, nonExistingId, getBlogs
+  initialBlogs, initialUsers, nonExistingId, getBlogs
 };
